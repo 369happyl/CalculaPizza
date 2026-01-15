@@ -1,59 +1,372 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Mini App</title>
-  <style>
-    body {
-      background: #0f172a;
-      color: #e5e7eb;
-      font-family: Arial;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .card {
-      background: #020617;
-      padding: 20px;
-      border-radius: 12px;
-      width: 300px;
-      box-shadow: 0 0 20px #38bdf8;
-    }
-    button {
-      background: #38bdf8;
-      border: none;
-      padding: 8px;
-      width: 100%;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calculapizza</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            height: 100vh; /* Mudado para vh fixo para evitar bugs em editores */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .calculator {
+    width: 100%;
+    max-width: 450px;
+    height: 100dvh; /* Ajuste dinâmico para telas de celular */
+    display: flex;
+    flex-direction: column;
+    padding: 40px 15px 10px 15px; /* 40px no topo já é o suficiente */
+    box-sizing: border-box;
+}
+
+
+
+        .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    margin-bottom: 20px; /* Afasta a pizza do número */
+}
+
+        /* Pizza CSS - Tamanho levemente reduzido para ganhar espaço */
+        .pizza-icon {
+            width: 70px;
+            height: 70px;
+            background-color: #f4d03f;
+            border-radius: 50%;
+            border: 2px solid #d35400;
+            position: relative;
+        }
+
+        .calabresa { position: absolute; width: 14px; height: 14px; background-color: #c0392b; border-radius: 50%; }
+        .c1 { top: 22px; left: 8px; }
+        .c2 { top: 18px; right: 4px; }
+        .c3 { bottom: 15px; left: 6px; }
+        .c4 { bottom: 15px; right: 8px; }
+
+        .azeitona { position: absolute; width: 6px; height: 6px; background-color: #2c3e50; border-radius: 50%; }
+        .a1 { top: 8px; left: 12px; }
+        .a2 { top: 10px; right: 8px; }
+
+        .cheddar { position: absolute; width: 15px; height: 15px; background-color: #e67e22; border-radius: 2px; transform: rotate(45deg); }
+        .ch1 { top: 6px; left: 12px; }
+        .ch2 { bottom: 25px; left: 20px; transform: rotate(-45deg); }
+
+        .icons-right { color: #4a6e4a; font-size: 18px; }
+        .icons-right span { margin-left: 10px; }
+
+        /* Display - Corrigido para não cortar */
+        .display-area {
+    flex: 1; /* Ocupa o espaço central */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Traz o número para perto dos botões */
+    align-items: flex-end;
+    padding: 10px 0;
+}
+
+        #history {
+            color: #777;
+            font-size: 18px;
+            margin-bottom: 5px;
+            min-height: 24px;
+        }
+
+        #result {
+            font-size: clamp(2rem, 12vw, 3.5rem); /* Diminuído levemente */
+            color: #fff;
+            text-align: right;
+            width: 100%;
+            line-height: 1.2; /* Aumentado para não cortar o topo dos números */
+            word-break: break-all;
+        }
+
+        .long-text {
+            font-size: clamp(1.1rem, 5vw, 1.6rem) !important;
+            color: #65e076 !important;
+        }
+
+        /* Teclado - Mais compacto */
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px; /* Espaço menor entre botões */
+    padding-bottom: 20px; /* Margem de segurança para não bater na borda do celular */
+    flex-shrink: 0; /* Impede que os botões diminuam ou sumam */
+}
+
+
+
+        button {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: none;
+            font-size: clamp(18px, 5vw, 24px);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #181818;
+            color: #fff;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:active { filter: brightness(1.5); }
+        .btn-greenish { color: #65e076; background-color: #252525; }
+        .btn-operator { color: #65e076; background-color: #252525; font-size: 28px; }
+        .btn-clear { color: #e06565; background-color: #252525; }
+        .btn-equal { background-color: #4b85c2; color: #fff; }
+
+    </style>
 </head>
 <body>
 
-<div class="card">
-  <h2 id="msg">Carregando...</h2>
-  <button onclick="somar()">Somar 2 + 3</button>
-  <p id="res"></p>
-</div>
+    <div class="calculator">
+        <div class="top-bar">
+            <div class="pizza-icon">
+                <div class="calabresa c1"></div><div class="calabresa c2"></div>
+                <div class="calabresa c3"></div><div class="calabresa c4"></div>
+                <div class="azeitona a1"></div><div class="azeitona a2"></div>
+                <div class="cheddar ch1"></div><div class="cheddar ch2"></div>
+            </div>
+            <div class="icons-right">  
+            <span>📏</span>  
+            <span>⚗️</span> </div>  
+    </div>  
+            
 
-<script>
-fetch("http://127.0.0.1:8000/")
-  .then(r => r.json())
-  .then(d => {
-    document.getElementById("msg").innerText = d.msg
-  })
+        <div class="display-area">
+            <div id="history"></div>
+            <div id="result">0</div>
+        </div>
 
-function somar() {
-  fetch("http://127.0.0.1:8000/api/soma?a=2&b=3")
-    .then(r => r.json())
-    .then(d => {
-      document.getElementById("res").innerText =
-        "Resultado: " + d.resultado
-    })
-}
-</script>
+        <div class="keypad">
+            <button class="btn-clear" onclick="clearDisplay()">C</button>
+            <button class="btn-greenish" onclick="appendOperator('(')">(</button>
+            <button class="btn-greenish" onclick="appendOperator(')')">)</button>
+            <button class="btn-operator" onclick="appendOperator('/')">÷</button>
 
+            <button onclick="appendNumber('7')">7</button>
+            <button onclick="appendNumber('8')">8</button>
+            <button onclick="appendNumber('9')">9</button>
+            <button class="btn-operator" onclick="appendOperator('*')">×</button>
+
+            <button onclick="appendNumber('4')">4</button>
+            <button onclick="appendNumber('5')">5</button>
+            <button onclick="appendNumber('6')">6</button>
+            <button class="btn-operator" onclick="appendOperator('-')">-</button>
+
+            <button onclick="appendNumber('1')">1</button>
+            <button onclick="appendNumber('2')">2</button>
+            <button onclick="appendNumber('3')">3</button>
+            <button class="btn-operator" onclick="appendOperator('+')">+</button>
+
+            <button onclick="toggleSign()">+/-</button>
+            <button onclick="appendNumber('0')">0</button>
+            <button onclick="appendNumber('.')">,</button>
+            <button class="btn-equal" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        const resultDisplay = document.getElementById('result');
+        const historyDisplay = document.getElementById('history');
+        let currentExpression = '';
+        let justCalculated = false;
+
+        const funnyMap = {
+             0: "0",
+            1: "1 pizza",
+            2: "2 queijos",
+            3: "3 é spre bom",
+            4: "4 calabresas",
+            5: "4+1 que legal",
+            6: "6 azeitonas",
+            7: "6 azeitonas e 1 pizza",
+            8: "6 azeitonas e 2 queijos",
+            9: "999999999999999999999999",
+            10: "10 pizzas è melhor q uma",
+            // Inventados de 11 a 49
+            11: "11 bordas recheadas",
+            12: "12 fatias de bacon",
+            13: "13 azeitonas da sorte",
+            14: "14 garçons correndo",
+            15: "15 minutos pro delivery",
+            16: "16kg de massa",
+            17: "17 clientes famintos",
+            18: "18 anos ja paga conta",
+            19: "19 guardanapos sujos",
+            20: "20 pizzas gigantes",
+            21: "21 condimentos estranhos",
+            22: "22 dois patinhos na lagoa de cheddar",
+            23: "23 fatias sobrando",
+            24: "24 horas de pizzaria",
+            25: "25 anos de tradição",
+            26: "26 tipos de queijo",
+            27: "27 pedidos atrasados",
+            28: "28 oréganos perdidos",
+            29: "29 centavos de troco",
+            30: "30 é a idade de cristo do queijo",
+            31: "31 de dezembro sem pizza",
+            32: "32 dentes mastigando",
+            33: "33 de idade de cristo",
+            34: "34 pedaços de tomate",
+            35: "35 molhos especiais",
+            36: "360 graus de borda",
+            37: "37 calorias apenas (mentira)",
+            38: "38 calibre de sabor",
+            39: "39 degraus pra entrega",
+            40: "40 ladrões de pizza",
+            41: "41 graus no forno",
+            42: "A resposta é pizza",
+            43: "43 azeitonas pretas",
+            44: "44 quatro quatro",
+            45: "45 do segundo tempo",
+            46: "46 chefs italianos",
+            47: "47 tipos de farinha",
+            48: "48 horas fermentando",
+            49: "Quase 50 calabresas",
+            50: "50 slk",
+            51: "51 moroboys empinando"
+             };
+
+        function appendNumber(num) {
+            if (justCalculated) {
+                currentExpression = '';
+                justCalculated = false;
+                resultDisplay.classList.remove('long-text');
+            }
+            // Evitar múltiplos zeros no início
+            if (currentExpression === '0' && num !== '.') {
+                currentExpression = num;
+            } else {
+                currentExpression += num;
+            }
+            updateDisplay(currentExpression);
+        }
+
+        function appendOperator(op) {
+            if (justCalculated) {
+                // Se acabou de calcular, usa o resultado anterior (mas precisa ser o número real, não o texto da pizza)
+                // Como o display mostra o texto, precisamos manter o valor numérico interno se quiséssemos continuar a conta complexa.
+                // Para simplificar essa lógica da "calculadora maluca", vamos resetar se for texto.
+                if (resultDisplay.classList.contains('long-text')) {
+                    currentExpression = ''; // Começa do zero se o último resultado foi texto maluco
+                }
+                justCalculated = false;
+                resultDisplay.classList.remove('long-text');
+            }
+            
+            // Troca visual dos operadores
+            let displayOp = op;
+            if (op === '*') displayOp = '×';
+            if (op === '/') displayOp = '÷';
+            
+            currentExpression += op;
+            updateDisplay(currentExpression.replace(/\*/g, '×').replace(/\//g, '÷'));
+        }
+
+        function clearDisplay() {
+            currentExpression = '';
+            updateDisplay('0');
+            historyDisplay.innerText = '';
+            resultDisplay.classList.remove('long-text');
+        }
+
+        function toggleSign() {
+            if (currentExpression) {
+                // Lógica simples de inversão
+                if (currentExpression.startsWith('-')) {
+                    currentExpression = currentExpression.substring(1);
+                } else {
+                    currentExpression = '-' + currentExpression;
+                }
+                updateDisplay(currentExpression);
+            }
+        }
+
+        function updateDisplay(val) {
+            resultDisplay.innerText = val;
+        }
+
+        function getPizzaPhrase(num) {
+            // Se for negativo, trata como positivo para pegar a frase
+            let n = Math.abs(num);
+            
+            // Se for flutuante, arredonda para baixo para simplificar
+            n = Math.floor(n);
+
+            if (n < 50) {
+                return funnyMap[n] || n;
+            } else {
+                // Lógica para >= 50: Separar dígitos
+                // Ex: 50 -> "4+1 que legal e 0"
+                let digits = n.toString().split('');
+                let phraseParts = digits.map(d => {
+                    let digitNum = parseInt(d);
+                    return funnyMap[digitNum]; // Usa o mapa de 0-9
+                });
+                return phraseParts.join(' e ');
+            }
+        }
+
+        function calculate() {
+            try {
+                // Avalia a expressão matemática
+                // Substitui × e ÷ pelos operadores JS
+                let evalString = currentExpression.replace(/×/g, '*').replace(/÷/g, '/');
+                
+                // Cuidado com eval em produção, mas ok para exercício simples
+                let result = eval(evalString);
+
+                // Mostra a conta no histórico
+                historyDisplay.innerText = currentExpression;
+
+                // Lógica Maluca
+                let finalOutput;
+                
+                // Se o resultado for um número válido
+                if (!isNaN(result) && isFinite(result)) {
+                    // Verifica se é inteiro para aplicar as frases (float ignora ou arredonda)
+                    if (Number.isInteger(result)) {
+                        finalOutput = getPizzaPhrase(result);
+                        resultDisplay.classList.add('long-text');
+                    } else {
+                        // Se for decimal (ex: 2.5), mostra o número normal ou arredonda?
+                        // O prompt não especificou, vamos arredondar para aplicar a lógica
+                        // ou mostrar normal. Vamos mostrar a lógica arredondada:
+                        let rounded = Math.round(result);
+                        finalOutput = getPizzaPhrase(rounded);
+                        resultDisplay.classList.add('long-text');
+                    }
+                } else {
+                    finalOutput = "tu acha q sei um bagulho desse?";
+                }
+
+                updateDisplay(finalOutput);
+                currentExpression = result.toString(); // Guarda o número real para contas futuras
+                justCalculated = true;
+
+            } catch (e) {
+                updateDisplay("Erro");
+                currentExpression = '';
+            }
+        }
+    </script>
 </body>
 </html>
