@@ -23,26 +23,24 @@
         }
 
         .calculator {
-    width: 100%;
-    max-width: 450px;
-    height: 100dvh; 
-    display: flex;
-    flex-direction: column;
-    padding: 40px 15px 10px 15px; 
-    box-sizing: border-box;
-}
-
-
+            width: 100%;
+            max-width: 450px;
+            height: 100dvh; 
+            display: flex;
+            flex-direction: column;
+            padding: 40px 15px 10px 15px; 
+            box-sizing: border-box;
+        }
 
         .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-    margin-bottom: 20px; 
-}
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            margin-bottom: 20px; 
+        }
 
-                .pizza-icon {
+        .pizza-icon {
             width: 70px;
             height: 70px;
             background-color: #f4d03f;
@@ -68,15 +66,14 @@
         .icons-right { color: #4a6e4a; font-size: 18px; }
         .icons-right span { margin-left: 10px; }
 
-        
         .display-area {
-    flex: 1; 
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end; 
-    align-items: flex-end;
-    padding: 10px 0;
-}
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; 
+            align-items: flex-end;
+            padding: 10px 0;
+        }
 
         #history {
             color: #777;
@@ -99,16 +96,13 @@
             color: #65e076 !important;
         }
 
-        
-.keypad {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px; 
-    padding-bottom: 20px; 
-    flex-shrink: 0; 
-}
-
-
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px; 
+            padding-bottom: 20px; 
+            flex-shrink: 0; 
+        }
 
         button {
             width: 100%;
@@ -146,9 +140,8 @@
             <div class="icons-right">  
             <span>📏</span>  
             <span>⚗️</span> </div>  
-    </div>  
+        </div>  
             
-
         <div class="display-area">
             <div id="history"></div>
             <div id="result">0</div>
@@ -188,21 +181,56 @@
         let currentExpression = '';
         let justCalculated = false;
 
+        // Piadas para divisão por zero
+        const zeroDivisionJokes = {
+            '0/0': "0 pizzas pra 0 pessoas? o universo explodiu",
+            '1/0': "1 pizza pra ninguém? não seja egoísta!",
+            '2/0': "2 pizzas perdidas no vácuo do espaço",
+            '3/0': "3 pizzas e nenhum amigo pra comer"
+        };
+
         const funnyMap = {
-             0: "0",
+            '-1': "ta devendo hein",
+            0: "compensa pedir mais uma pizza né",
+            0.1: "só o cheiro da caixa",
+            0.2: "uma lambida no queijo",
+            0.3: "uma mordiscada da borda",
+            0.4: "quase meia pizza",
             0.5: "meia pizza",
-                
+            0.6: "passou da metade",
+            0.7: "deixou a borda pra trás",
+            0.8: "roubaram uma fatia",
+            0.9: "quase inteira, faltou 1 mordida",
+
             1: "1 pizza",
+            1.1: "1 pizza e um pinguinho de molho",
+            1.2: "1 pizza e a sobra de ontem",
+            1.3: "1 pizza e uns farelos",
+            1.4: "1 pizza e meia quase",
             1.5: "meia meia",
+            1.6: "mais que uma e meia",
+            1.7: "uma pizza inteira + a do amigo",
+            1.8: "quase 2 pizzas completas",
+            1.9: "falta só um champignon pra 2",
+
             2: "2 queijos",
-            3: "3 é spre bom",
-            4: "4 calabresas",
-            5: "4+1 que legal",
+            2.5: "2 pizzas e meia de calabresa",
+            3: "3 é a trindade da pizza: massa, queijo e felicidade absoluta 🍕✨",
+            3.5: "3 e meia, dá pra dividir de boa",
+            4: "4 fatias pro mestre tartaruga ninja 🐢",
+            4.5: "4 e meia, pede logo 5",
+            5: "5 estrelas no app do delivery ⭐",
+            5.5: "5 e meia, haja barriga",
             6: "6 azeitonas",
+            6.5: "6 e meia de bacon",
             7: "6 azeitonas e 1 pizza",
+            7.5: "7 e meia, a conta tá alta",
             8: "6 azeitonas e 2 queijos",
-            9: "999999999999999999999999",
+            8.5: "8 e meia fatias voadoras",
+            9: "9 pedaços, o shape que lute 🏋️‍♂️",
+            9.5: "9 e meia, rodízio caseiro",
             10: "10 pizzas è melhor q uma",
+            
             11: "11 bordas recheadas",
             12: "12 fatias de bacon",
             13: "13 azeitonas da sorte",
@@ -243,8 +271,117 @@
             48: "48 horas fermentando",
             49: "Quase 50 calabresas",
             50: "50 slk",
-            51: "51 motoboys empinando"
-             };
+            51: "51 motoboys empinando",
+            
+            52: "52 domingos comendo pizza",
+            53: "53 fatias caídas no chão",
+            54: "54 embalagens de viagem",
+            55: "55 sachês de ketchup esquecidos",
+            56: "56 gotas de pimenta",
+            57: "57 reais a taxa de entrega",
+            58: "58 minutos de atraso",
+            59: "59 mordidas rápidas",
+            60: "60 segundos pra devorar",
+            61: "61 peperonis alinhados",
+            62: "62 fios de queijo derretido",
+            63: "63 azeitonas sem caroço",
+            64: "64 quadradinhos de provolone",
+            65: "65 motoboys no grau",
+            66: "66 fatias do diabo",
+            67: "six seven",
+            68: "68 pedaços de frango desfiado",
+            69: "hm safado",
+            70: "70% catupiry, 30% massa",
+            71: "71 fornos à lenha",
+            72: "72 horas tentando digerir",
+            73: "73 cupons de desconto vencidos",
+            74: "74 panfletos na caixa de correio",
+            75: "75 kg de puro carboidrato",
+            76: "76 italianos chorando pro abacaxi",
+            77: "77 milagres da fermentação",
+            78: "78 rodízios na semana",
+            79: "79 reais numa pizza brotinho?!",
+            80: "80 fatias de presunto parma",
+            81: "81 rodelas de cebola crua",
+            82: "82 clientes pedindo pra tirar cebola",
+            83: "83 caixas empilhadas na sala",
+            84: "84 litros de refrigerante trincando",
+            85: "85 fatias de manjericão fresco",
+            86: "86 vezes que a luz acabou no forno",
+            87: "87 avaliações 5 estrelas",
+            88: "88 fatias perfeitamente cortadas",
+            89: "89 queijos diferentes na mesma pizza",
+            90: "90 graus de ângulo na fatia",
+            91: "91 toalhas xadrez sujas de molho",
+            92: "92 pizzaiolos rodando a massa",
+            93: "93 entregas na chuva",
+            94: "94 maioneses caseiras de alho",
+            95: "95 azeitonas que vieram com caroço",
+            96: "96 fatias queimadas nas bordas",
+            97: "97 clientes pedindo borda de chocolate",
+            98: "98 vezes esqueceram a maquininha",
+            99: "99 problemas, mas a pizza não é um",
+            100: "100% queijo derretendo na tela",
+            101: "101 dálmatas comendo pepperoni",
+            102: "102 receitas secretas de molho",
+            103: "103 panelas de molho de tomate",
+            104: "104 fatias pra família toda",
+            105: "105 gorjetas pro entregador",
+            106: "106 graus Celsius queimando a língua",
+            107: "107 tentativas de fazer massa em casa",
+            108: "108 azeitonas espalhadas",
+            109: "109 caixas de papelão recicladas",
+            110: "110 fatias na festa da empresa",
+            111: "111 fatias e um sonho",
+            112: "112 ligações de sexta à noite",
+            113: "113 mililitros de azeite extra virgem",
+            114: "114 fatias pra curar a ressaca",
+            115: "115 furos no fundo da caixa",
+            116: "116 folhas de rúcula",
+            117: "117 tomates cereja rolando",
+            118: "118 centímetros de diâmetro",
+            119: "119 fatias disputadas no tapa",
+            120: "120 batimentos cardíacos pós-pizza",
+            121: "121 queijos minas perdidos",
+            122: "122 pedaços de lombo canadense",
+            123: "123, testando o forno...",
+            124: "124 fatias pro campeonato",
+            125: "125 calorias por mordida",
+            126: "126 sachês de mostarda ignorados",
+            127: "127 IPs hackeados por pizza",
+            128: "128 bits de queijo digital",
+            129: "129 vezes que a pizza grudou na tampa",
+            130: "130 fatias... já pode abrir franquia",
+            131: "131 rodelas de calabresa perfeitas",
+            132: "132 clientes reclamando da demora",
+            133: "133 estrelas Michelin (na cabeça do dono)",
+            134: "134 espátulas sujas de queijo",
+            135: "135 vídeos de pizza no TikTok",
+            136: "136 fotos da pizza antes de comer",
+            137: "137 fatias com pimenta calabresa",
+            138: "138 sorrisos com a boca cheia",
+            139: "139 fiapos de queijo puxando",
+            140: "140 fatias, haja estômago!",
+            141: "141 pedaços cortados tortos",
+            142: "142 tentativas de comer de garfo e faca",
+            143: "143 caixas guardadas na garagem",
+            144: "144 horas pensando na próxima pizza",
+            145: "145 azeitonas chilenas gigantes",
+            146: "146 palitos de dente usados",
+            147: "147 fatias... o botão da calça estourou",
+            148: "148 elogios ao pizzaiolo",
+            149: "149 fatias... falta uma pro recorde",
+            150: "150 fatias, virou oficialmente rodízio",
+            
+            // Easter Eggs Novos!
+            157: "perdeu playboy, passa as pizza 🔫🍕",
+            190: "slk cara",
+            244: "🏍️💨 (corte de giro e pizza na bag)",
+            666: "ta maluco po cuidado",
+            1533: "polícia 🚓🚨",
+            9999: "você virou o dono da pizzaria 🍕👑",
+            999999: "voce é o dono da sadia ou oq"
+        };
 
         function appendNumber(num) {
             if (justCalculated) {
@@ -252,7 +389,7 @@
                 justCalculated = false;
                 resultDisplay.classList.remove('long-text');
             }
-                        if (currentExpression === '0' && num !== '.') {
+            if (currentExpression === '0' && num !== '.') {
                 currentExpression = num;
             } else {
                 currentExpression += num;
@@ -262,14 +399,14 @@
 
         function appendOperator(op) {
             if (justCalculated) {
-                   if (resultDisplay.classList.contains('long-text')) {
+                if (resultDisplay.classList.contains('long-text')) {
                     currentExpression = ''; 
                 }
                 justCalculated = false;
                 resultDisplay.classList.remove('long-text');
             }
             
-               let displayOp = op;
+            let displayOp = op;
             if (op === '*') displayOp = '×';
             if (op === '/') displayOp = '÷';
             
@@ -279,14 +416,14 @@
 
         function clearDisplay() {
             currentExpression = '';
-            updateDisplay('0');
+            updateDisplay('compensa pedir mais uma pizza né');
             historyDisplay.innerText = '';
-            resultDisplay.classList.remove('long-text');
+            resultDisplay.classList.add('long-text');
         }
 
         function toggleSign() {
             if (currentExpression) {
-                     if (currentExpression.startsWith('-')) {
+                if (currentExpression.startsWith('-')) {
                     currentExpression = currentExpression.substring(1);
                 } else {
                     currentExpression = '-' + currentExpression;
@@ -300,17 +437,17 @@
         }
 
         function getPizzaPhrase(num) {
-              let n = Math.abs(num);
-            
-                       n = Math.floor(n);
+            let n = Math.abs(num);
+            n = Math.floor(n);
 
-            if (n < 52) {
-                return funnyMap[n] || n;
+            // Verifica primeiro se tem piada mapeada direta, inclusive para >150
+            if (funnyMap[n] !== undefined) {
+                return funnyMap[n];
             } else {
                 let digits = n.toString().split('');
                 let phraseParts = digits.map(d => {
                     let digitNum = parseInt(d);
-                    return funnyMap[digitNum];
+                    return funnyMap[digitNum] || digitNum;
                 });
                 return phraseParts.join(' e ');
             }
@@ -318,24 +455,34 @@
 
         function calculate() {
             try {
-                
                 let evalString = currentExpression.replace(/×/g, '*').replace(/÷/g, '/');
                 
-                   let result = eval(evalString);
+                // Checagem das piadas de divisão por zero antes do cálculo matemático
+                if (zeroDivisionJokes[evalString]) {
+                    historyDisplay.innerText = currentExpression;
+                    updateDisplay(zeroDivisionJokes[evalString]);
+                    resultDisplay.classList.add('long-text');
+                    currentExpression = ''; 
+                    justCalculated = true;
+                    return;
+                }
 
-                         historyDisplay.innerText = currentExpression;
+                let result = eval(evalString);
 
-                         let finalOutput;
+                historyDisplay.innerText = currentExpression;
+
+                let finalOutput;
                 
-                       if (!isNaN(result) && isFinite(result)) {
-                           if (Number.isInteger(result)) {
-                        finalOutput = getPizzaPhrase(result);
-                        resultDisplay.classList.add('long-text');
+                if (!isNaN(result) && isFinite(result)) {
+                    // Tenta achar a piada para o número exato primeiro (útil para os decimais mapeados e easter eggs)
+                    if (funnyMap[result] !== undefined) {
+                        finalOutput = funnyMap[result];
                     } else {
-                           let rounded = Math.round(result);
+                        // Se for um decimal não mapeado, arredonda e pega a do inteiro
+                        let rounded = Math.round(result);
                         finalOutput = getPizzaPhrase(rounded);
-                        resultDisplay.classList.add('long-text');
                     }
+                    resultDisplay.classList.add('long-text');
                 } else {
                     finalOutput = "tu acha q sei um bagulho desse?";
                 }
@@ -349,6 +496,11 @@
                 currentExpression = '';
             }
         }
+
+        // Inicia a tela limpa já com a piada do 0
+        window.onload = () => {
+            clearDisplay();
+        };
     </script>
 </body>
 </html>
